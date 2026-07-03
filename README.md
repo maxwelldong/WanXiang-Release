@@ -42,6 +42,27 @@
 
 ---
 
+<!-- SUB_SECTION_START -->
+
+
+---
+
+## 📡 订阅源（自动同步）
+
+> 上游：[Jsnzkpg/Jsnzkpg](https://github.com/Jsnzkpg/Jsnzkpg) | 每日自动检测更新，已去除广告推广内容
+
+| 名称 | 直链（已加 gh-proxy 加速） |
+|:---|:---|
+| 🪜 节点订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/Proxy` |
+| 📺 IPTV订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u` |
+| 🎥 TVbox订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/TVbox` |
+| 🎞️ UZ影视订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/UZ` |
+| 📽️ Cinetry订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/Cinetry` |
+| 📹 EchoTV订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/EchoTV` |
+
+
+<!-- SUB_SECTION_END -->
+
 ## License
 
 © 2024-2025 万象影视

@@ -1,0 +1,137 @@
+name: 同步上游订阅源
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 检查上游是否有更新
+        id: check
+        run: |
+          UPSTREAM=$(curl -s "https://api.github.com/repos/Jsnzkpg/Jsnzkpg/branches/Jsnzkpg" \
+            -H "Accept: application/vnd.github+json" | jq -r '.commit.sha')
+          echo "upstream_sha=${UPSTREAM}" >> "$GITHUB_OUTPUT"
+          if [ -f .last_sha ]; then
+            LAST=$(cat .last_sha)
+            if [ "${UPSTREAM}" = "${LAST}" ]; then
+              echo "changed=false" >> "$GITHUB_OUTPUT"
+              echo "no update"
+            else
+              echo "changed=true" >> "$GITHUB_OUTPUT"
+              echo "update found: ${LAST:0:7} -> ${UPSTREAM:0:7}"
+            fi
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "first sync: ${UPSTREAM:0:7}"
+          fi
+
+      - name: 下载源文件
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          UPSTREAM_URL="https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/Jsnzkpg"
+          curl -sL "${UPSTREAM_URL}/Jsnzkpg"     -o /tmp/raw_Proxy
+          curl -sL "${UPSTREAM_URL}/Jsnzkpg1"    -o /tmp/raw_Live
+          curl -sL "${UPSTREAM_URL}/Jsnzkpg1.m3u" -o /tmp/raw_IPTV.m3u
+          curl -sL "${UPSTREAM_URL}/Jsnzkpg2"    -o /tmp/raw_TVbox
+          curl -sL "${UPSTREAM_URL}/Jsnzkpg3"    -o /tmp/raw_UZ
+          curl -sL "${UPSTREAM_URL}/Jsnzkpg4"    -o /tmp/raw_Cinetry
+          curl -sL "${UPSTREAM_URL}/Jsnzkpg5"    -o /tmp/raw_EchoTV
+          echo "done"
+
+      - name: 去广告处理
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          python3 << 'PYEOF'
+import json, shutil
+ADS = ['TG频道', '备用频道', '裤佬', '共享账号', '自用机场', '网盘',
+       '永久域名', '永久官网', '永久地址']
+# 1. Proxy
+with open('/tmp/raw_Proxy', 'r', encoding='utf-8') as f:
+    lines = f.readlines()
+kept = [l for l in lines if not (l.startswith('  - {name: ') and any(k in l for k in ADS))]
+with open('Proxy', 'w', encoding='utf-8') as f:
+    f.writelines(kept)
+# 2. Live
+with open('/tmp/raw_Live', 'r', encoding='utf-8') as f:
+    content = f.read()
+idx = content.find('\n\U0001f525')
+if idx != -1:
+    content = content[idx + 1:]
+with open('Live', 'w', encoding='utf-8') as f:
+    f.write(content)
+# 3. IPTV.m3u
+with open('/tmp/raw_IPTV.m3u', 'r', encoding='utf-8') as f:
+    lines = f.readlines()
+kept, skip = [], False
+for i, line in enumerate(lines):
+    if skip:
+        skip = False; continue
+    if '#EXTINF:-1' in line and '\u2708\ufe0fTG\u9891\u9053' in line:
+        if i + 1 < len(lines): skip = True
+        continue
+    kept.append(line)
+with open('IPTV.m3u', 'w', encoding='utf-8') as f:
+    f.writelines(kept)
+# 4. TVbox
+shutil.copy2('/tmp/raw_TVbox', 'TVbox')
+# 5. UZ
+with open('/tmp/raw_UZ', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+for sec in ['live', 'vod']:
+    if sec in data:
+        for item in data[sec]:
+            item.pop('remark', None)
+        data[sec] = [item for item in data[sec] if 'TG\u9891\u9053' not in item.get('name', '')]
+with open('UZ', 'w', encoding='utf-8') as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+# 6. Cinetry
+shutil.copy2('/tmp/raw_Cinetry', 'Cinetry')
+# 7. EchoTV
+with open('/tmp/raw_EchoTV', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+keys = [k for k, v in data.get('api_site', {}).items() if 'TG\u9891\u9053' in v.get('name', '')]
+for k in keys:
+    del data['api_site'][k]
+with open('EchoTV', 'w', encoding='utf-8') as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+print('done')
+PYEOF
+
+      - name: 更新 README
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          python3 << 'PYEOF'
+with open('README.md', 'r', encoding='utf-8') as f:
+    content = f.read()
+sub = '\n---\n\n## 📡 订阅源（自动同步）\n\n> 上游：[Jsnzkpg/Jsnzkpg](https://github.com/Jsnzkpg/Jsnzkpg) | 每日自动检测更新，已去除广告推广内容\n\n| 名称 | 直链（已加 gh-proxy 加速） |\n|:---|:---|\n| 🪜 节点订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/Proxy` |\n| 📺 IPTV订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u` |\n| 🎥 TVbox订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/TVbox` |\n| 🎞️ UZ影视订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/UZ` |\n| 📽️ Cinetry订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/Cinetry` |\n| 📹 EchoTV订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/EchoTV` |\n'
+MS, ME = '<!-- SUB_SECTION_START -->', '<!-- SUB_SECTION_END -->'
+new_block = MS + '\n' + sub + '\n' + ME
+if MS in content:
+    before = content.split(MS)[0]
+    after = content.split(ME)[1]
+    new_content = before + new_block + after
+else:
+    new_content = content.replace('## License', new_block + '\n\n## License')
+with open('README.md', 'w', encoding='utf-8') as f:
+    f.write(new_content)
+print('done')
+PYEOF
+
+      - name: 提交并推送
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          echo "${{ steps.check.outputs.upstream_sha }}" > .last_sha
+          git config user.name "sync-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add .
+          git commit -m "sync upstream $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')"
+          git push
