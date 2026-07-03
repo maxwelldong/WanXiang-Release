@@ -324,8 +324,8 @@ def build_all(all_cms, all_live, output_dir):
             "live_total": len(all_live),
             "grand_total": len(vod_list) + len(live_list),
         },
-        "cms_sources": [{"name": v["name"], "url": k} for k, v in sorted(all_cms.items())],
-        "live_sources": [{"name": v["name"], "url": k} for k, v in sorted(all_live.items())],
+        "cms_sources": [{"name": next(iter(v["names"])), "url": k} for k, v in sorted(all_cms.items())],
+        "live_sources": [{"name": next(iter(v["names"])), "url": k} for k, v in sorted(all_live.items())],
     }
     with open(report_path, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
