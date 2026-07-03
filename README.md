@@ -44,13 +44,9 @@
 
 <!-- SUB_SECTION_START -->
 
-
----
-
 ## 📡 订阅源（自动同步）
 
-咪咕源 实时更新
-M3U: https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/iptv/main/m3u/migu.m3u
+> 上游：[Jsnzkpg/Jsnzkpg](https://github.com/Jsnzkpg/Jsnzkpg) | 每日自动检测更新，已去除广告推广内容
 
 | 名称 | 直链（已加 gh-proxy 加速） |
 |:---|:---|
@@ -58,7 +54,7 @@ M3U: https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/iptv/main/m3
 | 🎥 TVbox订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/TVbox` |
 | 🎞️ UZ影视订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/UZ` |
 | 📹 EchoTV订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/EchoTV` |
-
+| 🎬 万象订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/subscribe/wanxiang.json` |
 
 <!-- SUB_SECTION_END -->
 
