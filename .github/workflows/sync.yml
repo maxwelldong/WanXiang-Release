@@ -93,23 +93,45 @@ jobs:
       - name: 更新 README
         if: steps.check.outputs.changed == 'true'
         run: |
-          python3 << 'PYEOF'
-          with open('README.md', 'r', encoding='utf-8') as f:
-          content = f.read()
-          sub = '\n---\n\n## 📡 订阅源（自动同步）\n\n> 上游：[Jsnzkpg/Jsnzkpg](https://github.com/Jsnzkpg/Jsnzkpg) | 每日自动检测更新，已去除广告推广内容\n\n| 名称 | 直链（已加 gh-proxy 加速） |\n|:---|:---|\n| 📺 IPTV订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u` |\n| 🎥 TVbox订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/TVbox` |\n| 🎞️ UZ影视订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/UZ` |\n| 📹 EchoTV订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/EchoTV` |\n'
-          MS, ME = '<!-- SUB_SECTION_START -->', '<!-- SUB_SECTION_END -->'
-          new_block = MS + '\n' + sub + '\n' + ME
-          if MS in content:
-          before = content.split(MS)[0]
-          after = content.split(ME)[1]
-          new_content = before + new_block + after
-          else:
-          new_content = content.replace('## License', new_block + '\n\n## License')
-          with open('README.md', 'w', encoding='utf-8') as f:
-          f.write(new_content)
-          print('done')
-PYEOF
+          python3 -c "
+          ms = '<!-- SUB_SECTION_START -->'
+          me = '<!-- SUB_SECTION_END -->'
+          with open('README.md', 'r') as f:
+              cur = f.read()
+          sub = ms + '
 
+## 📡 订阅源（自动同步）
+
+> 上游：[Jsnzkpg/Jsnzkpg](https://github.com/Jsnzkpg/Jsnzkpg) | 每日自动检测更新，已去除广告推广内容
+
+| 名称 | 直链（已加 gh-proxy 加速） |
+|:---|:---|
+| 📺 IPTV订阅 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u\` |
+| 🎥 TVbox订阅 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/TVbox\` |
+| 🎞️ UZ影视订阅 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/UZ\` |
+| 📹 EchoTV订阅 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/EchoTV\` |
+| 🎬 万象订阅 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/subscribe/wanxiang.json\` |
+' + me
+          if ms in cur:
+              before = cur.split(ms)[0]
+              after_ = cur.split(me)[1]
+              new_c = before + sub + after_
+          else:
+              new_c = cur.replace('## License', sub + '
+
+## License')
+          with open('README.md', 'w') as f:
+              f.write(new_c)
+          print('done')
+          "
+
+      - name: 万象影视订阅源抓取
+        run: |
+          python3 scripts/scrape_and_build.py
+
+      - name: 复制订阅文件到根目录
+        run: |
+          cp subscribe/wanxiang.json wanxiang.json 2>/dev/null || true
       - name: 提交并推送
         if: steps.check.outputs.changed == 'true'
         run: |
