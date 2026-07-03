@@ -53,11 +53,9 @@
 
 | 名称 | 直链（已加 gh-proxy 加速） |
 |:---|:---|
-| 🪜 节点订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/Proxy` |
 | 📺 IPTV订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u` |
 | 🎥 TVbox订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/TVbox` |
 | 🎞️ UZ影视订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/UZ` |
-| 📽️ Cinetry订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/Cinetry` |
 | 📹 EchoTV订阅 | `https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/EchoTV` |
 
 
