@@ -91,7 +91,6 @@ jobs:
           print('done')
           "
       - name: 更新 README
-        if: steps.check.outputs.changed == 'true'
         run: |
           python3 -c "
           line = []
@@ -134,11 +133,13 @@ jobs:
         run: |
           cp subscribe/wanxiang.json wanxiang.json 2>/dev/null || true
       - name: 提交并推送
-        if: steps.check.outputs.changed == 'true'
         run: |
-          echo "${{ steps.check.outputs.upstream_sha }}" > .last_sha
           git config user.name "sync-bot"
           git config user.email "bot@users.noreply.github.com"
           git add .
-          git commit -m "sync upstream $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')"
-          git push
+          if git diff --cached --quiet; then
+            echo "no changes, skip"
+          else
+            git commit -m "sync $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')"
+            git push
+          fi
