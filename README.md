@@ -41,7 +41,7 @@
 - **系统** — 明暗主题，语言切换，缓存清理，更新检测
 
 ---
-WebView：https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/lives/live-tv.json
+WebView央视：https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/lives/live-tv.json
 <!-- SUB_SECTION_START -->
 
 ## 📡 订阅源（自动同步）
