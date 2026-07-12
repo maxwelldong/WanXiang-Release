@@ -17,32 +17,30 @@ jobs:
       - name: 检查上游是否有更新
         id: check
         run: |
-          UPSTREAM=$(curl -s "https://api.github.com/repos/Jsnzkpg/Jsnzkpg/branches/Jsnzkpg" \
-            -H "Accept: application/vnd.github+json" | jq -r '.commit.sha')
-          echo "upstream_sha=${UPSTREAM}" >> "$GITHUB_OUTPUT"
+          UPSTREAM=
+          echo "upstream_sha=" >> ""
           if [ -f .last_sha ]; then
-            LAST=$(cat .last_sha)
-            if [ "${UPSTREAM}" = "${LAST}" ]; then
-              echo "changed=false" >> "$GITHUB_OUTPUT"
+            LAST=
+            if [ "" = "" ]; then
+              echo "changed=false" >> ""
               echo "no update"
             else
-              echo "changed=true" >> "$GITHUB_OUTPUT"
-              echo "update found: ${LAST:0:7} -> ${UPSTREAM:0:7}"
+              echo "changed=true" >> ""
+              echo "update found:  -> "
             fi
           else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "first sync: ${UPSTREAM:0:7}"
+            echo "changed=true" >> ""
+            echo "first sync: "
           fi
 
       - name: 下载源文件
         if: steps.check.outputs.changed == 'true'
         run: |
           UPSTREAM_URL="https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/Jsnzkpg"
-          curl -sL "${UPSTREAM_URL}/Jsnzkpg1"    -o /tmp/raw_Live
-          curl -sL "${UPSTREAM_URL}/Jsnzkpg1.m3u" -o /tmp/raw_IPTV.m3u
-          curl -sL "${UPSTREAM_URL}/Jsnzkpg2"    -o /tmp/raw_TVbox
-          curl -sL "${UPSTREAM_URL}/Jsnzkpg3"    -o /tmp/raw_UZ
-          curl -sL "${UPSTREAM_URL}/Jsnzkpg5"    -o /tmp/raw_EchoTV
+          curl -sL "/Jsnzkpg1"    -o /tmp/raw_Live
+          curl -sL "/Jsnzkpg1.m3u" -o /tmp/raw_IPTV.m3u
+          curl -sL "/Jsnzkpg3"    -o /tmp/raw_UZ
+          curl -sL "/Jsnzkpg5"    -o /tmp/raw_EchoTV
           echo "done"
 
       - name: 去广告处理
@@ -50,8 +48,6 @@ jobs:
         run: |
           python3 -c "
           import json, shutil
-          import shutil as _sh
-          import json as _js
           with open('/tmp/raw_Live', 'r') as f:
               c = f.read()
           idx = c.find('🔥')
@@ -71,23 +67,22 @@ jobs:
               kept.append(line)
           with open('IPTV.m3u', 'w') as f:
               f.writelines(kept)
-          _sh.copy2('/tmp/raw_TVbox', 'TVbox')
           with open('/tmp/raw_UZ', 'r') as f:
-              data = _js.load(f)
+              data = json.load(f)
           for sec in ['live', 'vod']:
               if sec in data:
                   for item in data[sec]:
                       item.pop('remark', None)
                   data[sec] = [item for item in data[sec] if '频道' not in item.get('name', '')]
           with open('UZ', 'w') as f:
-              _js.dump(data, f, indent=2, ensure_ascii=False)
+              json.dump(data, f, indent=2, ensure_ascii=False)
           with open('/tmp/raw_EchoTV', 'r') as f:
-              data = _js.load(f)
+              data = json.load(f)
           keys = [k for k, v in data.get('api_site', {}).items() if '频道' in v.get('name', '')]
           for k in keys:
               del data['api_site'][k]
           with open('EchoTV', 'w') as f:
-              _js.dump(data, f, indent=2, ensure_ascii=False)
+              json.dump(data, f, indent=2, ensure_ascii=False)
           print('done')
           "
       - name: 更新 README
@@ -102,12 +97,11 @@ jobs:
           line.append('')
           line.append('| 名称 | 直链（已加 gh-proxy 加速） |')
           line.append('|:---|:---|')
-          line.append('| 📺 IPTV订阅 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u\` |')
-          line.append('| 🎥 TVbox订阅 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/TVbox\` |')
-          line.append('| 🎞️ UZ影视订阅 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/UZ\` |')
-          line.append('| 📹 EchoTV订阅 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/EchoTV\` |')
-          line.append('| 🎬 咪咕源 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/iptv/main/m3u/migu.m3u\` |')
-          line.append('| 🎬 万象订阅 | \`https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/subscribe/wanxiang.json\` |')
+          line.append('| 📺 IPTV订阅 | https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u |')
+          line.append('| 🎞️ UZ影视订阅 | https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/UZ |')
+          line.append('| 📹 EchoTV订阅 | https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/EchoTV |')
+          line.append('| 🎬 咪咕源 | https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/iptv/main/m3u/migu.m3u |')
+          line.append('| 🎬 万象订阅 | https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/subscribe/wanxiang.json |')
           line.append('')
           line.append('<!-- SUB_SECTION_END -->')
           sub = chr(10).join(line)
@@ -145,6 +139,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "no changes, skip"
           else
-            git commit -m "sync $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')"
+            git commit -m "sync "
             git push
           fi
