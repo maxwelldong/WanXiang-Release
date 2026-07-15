@@ -15,7 +15,7 @@
 
 | 名称 | 直链（已加 gh-proxy 加速） |
 ---
-| 🎬WebView |https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/lives/live-tv.json
+| 🎬WebView |https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/lives/live-tv.json|
 | 🎬 咪咕源 | https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/iptv/main/m3u/migu.m3u |
 | 📺 IPTV订阅 | https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u |
 | 🎞️ UZ影视订阅 | https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/UZ |
