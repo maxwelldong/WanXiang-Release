@@ -18,11 +18,11 @@
 ---
 | 🎬WebView |   https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/lives/live-tv.json  |
 
-| 🎬综合直播 |     https://ghfast.top/https://raw.githubusercontent.com/develop202/migu_video/refs/heads/main/interface.txt     |
+| 🎬综合直播 |     https://cdn.jsdmirror.com/gh/develop202/migu_video@main/interface.txt    |
 
 | 🎬 咪咕源 |     https://cdn.jsdmirror.cn/gh/jia070310/lemonTV@main/iptv-fe.m3u      |
 
-| 📺 IPTV订阅 |     https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u      |
+| 📺 IPTV订阅 |     https://cdn.jsdmirror.com/gh/AudiHub/WanXiang-Release@main/IPTV.m3u      |
 
 | 订阅导入（已加 gh-proxy 加速） |
 ---
