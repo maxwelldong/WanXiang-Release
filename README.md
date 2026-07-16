@@ -20,7 +20,7 @@
 
 | 🎬综合直播 |     https://cdn.jsdmirror.com/gh/develop202/migu_video@main/interface.txt    |
 
-| 🎬 咪咕源 |     https://cdn.jsdmirror.cn/gh/jia070310/lemonTV@main/iptv-fe.m3u      |
+| 🎬 咪咕源 |     https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/iptv/main/m3u/migu.m3u      |
 
 | 📺万象直播 |    https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u    |
 
