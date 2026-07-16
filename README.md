@@ -24,6 +24,8 @@
 
 | 📺 IPTV订阅 |     https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/IPTV.m3u      |
 
+| 订阅导入（已加 gh-proxy 加速） |
+---
 | 🎞️ UZ影视订阅 |     https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/UZ      |
 
 | 📹 EchoTV订阅 |     https://gh-proxy.org/https://raw.githubusercontent.com/AudiHub/WanXiang-Release/main/EchoTV     |
